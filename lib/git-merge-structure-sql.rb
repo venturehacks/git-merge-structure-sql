@@ -163,6 +163,8 @@ class StructureSqlMergeDriver
     files = opts.order(argv)
 
     if install
+      require 'fileutils'
+
       puts "Registering the \"#{driver_name}\" driver in your git configuration"
 
       system!(*%W[
@@ -191,6 +193,9 @@ class StructureSqlMergeDriver
             end
           } or raise "don't you have home?"
         end
+
+      FileUtils.mkdir_p(File.dirname(attributes_file))
+      FileUtils.touch(attributes_file)
 
       File.open(attributes_file, 'r+') { |f|
         pattern = /^\s*structure.sql\s+(?:\S+\s+)*merge=#{Regexp.quote(driver_name)}(?:\s|$)/
